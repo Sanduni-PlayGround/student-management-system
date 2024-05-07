@@ -48,17 +48,19 @@ public class MainViewController {
             ObservableList<Student> studentList = tblStudent.getItems();//this getItems() method will return the ObservableList of the table in UI (tblStudent)
             //here we get the observable list of the table out, since we need to add the records into table in UI (tblStudent) according to
             //records in database table (Student)
-            while(rst.next()){}
-            rst.next();//get the first student in the (ResultSet rst) (in the dataBase)
+            while(rst.next()){//add all the students to the UI table, if there is a next item (student) present take that item and loop will continue
+                String id = formatStudentId(rst.getInt("id"));//get the value of the id column (String we set here should be the exact name of the column in table student in the database),
+                // and format it to a string, set it to a variable calls id
+                String name = rst.getString("name");
+                String address = rst.getString("address");
+                String contact = rst.getString("contacts");
 
-            String id = formatStudentId(rst.getInt("id"));//get the value of the id column (String we set here should be the exact name of the column in table student in the database),
-            // and format it to a string, set it to a variable calls id
-            String name = rst.getString("name");
-            String address = rst.getString("address");
-            String contact = rst.getString("contacts");
+                Student student = new Student(id, name,address, contact); //create a new Student object (to represent that particular person in database) passing all those values
+                studentList.add(student); //add that student into the observable list (calls studentList)
+            }
 
-            Student student = new Student(id, name,address, contact); //create a new Student object (to represent that particular person in database) passing all those values
-            studentList.add(student); //add that student into the observable list (calls studentList)
+
+
         }catch (SQLException e){//if there is a SQL exception throws,
             e.printStackTrace();//print it
             new Alert(Alert.AlertType.ERROR, "Failed to load student details, try again").show();
